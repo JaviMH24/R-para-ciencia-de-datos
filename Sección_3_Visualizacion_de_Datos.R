@@ -1,20 +1,21 @@
-#3.2 Primeros pasos
+#3.2 **Primeros pasos**
 
 library(datos) #De esta manera se importa una libreria
+library(ggplot2)
 
 #3.2.1 Cargando una base de datos en R
 
 millas  #llamamos a un data frame que aparece en "datos"
 
 
-#3.2.2 Crear un gráfico en ggplot
+#3.2.2 **Crear un gráfico en ggplot**
 
 #De esta manera graficamos datos con ggplot
 
 ggplot(data=millas)+
   geom_point(mapping= aes(x=cilindrada, y=autopista))
 
-# 3.2.3 Una plantilla de gráficos
+# 3.2.3 **Una plantilla de gráficos**
 
 #De forma general, la sintaxis para crear una plantilla de graficos
 # Es de la siguiente manera: (no correr)
@@ -22,7 +23,7 @@ ggplot(data=millas)+
 ggplot(data = <DATOS>) +
   <GEOM_FUNCIÓN>(mapping = aes(<MAPEOS>))
 
-#3.2.4 Ejercicios
+#3.2.4 **Ejercicios**
 
 #---------------------------------------
 
@@ -73,7 +74,7 @@ ggplot(data=millas)+
 #---------------------------------------
 
 
-#3.2.4 Mapeos estéticos
+#3.2.4 **Mapeos estéticos**
 
 #El mapeo entre las propiedades estéticas de tu gráfico y las variables
 #de tu dataset te permite comunicar información sobre tus datos. 
@@ -103,7 +104,7 @@ ggplot(data=millas)+
 ggplot(data=millas)+
   geom_point(mapping = aes(x=cilindrada, y=autopista), color="blue")
  
-#3.3.1 Ejercicios
+#3.3.1 **Ejercicios**
 
 #1. ¿Qué no va bien en este código? ¿Por qué hay puntos que no son azules?
 
@@ -169,5 +170,109 @@ ggplot(data=millas)+
 #R. Genera una clasificación tipo booleana, donde la condicionimpuesta a la
 #variable cilindrada, tendra un colo diferente para valores menores que 5, y 
 #otro color, para valores mayores que 5
+
+#3.4 **Problemas Comunes**
+
+#Un problema común al crear gráficos con ggplot2 es colocar el + en el lugar equivocado: debe ubicarse al final de la línea, 
+#no al inicio. En otras palabras, asegúrate de no haber escrito accidentalmente 
+#un código como este:
+
+ggplot(data = millas)
++ geom_point(mapping = aes(x = cilindrada, y = autopista))
+
+#3.5 **Separar en facetas**
+
+#Otra forma particularmente útil para las variables categóricas consiste
+#en dividir el gráfico en facetas, es decir, sub-gráficos que
+# muestran cada uno un subconjunto de los datos.
+
+#Para separar en facetas un gráfico según una sola variable,
+#utiliza facet_wrap() (del inglés envolver una faceta).  La variable que uses
+#en facet_wrap() debe ser categórica. De la siguiente forma:
+
+
+ggplot(data = millas) +
+  geom_point(mapping = aes(x = cilindrada, y = autopista)) +
+  facet_wrap(~ clase, nrow=2) #Aqui clase es la variable categorica en la que se
+#subdividen los graficos.
+
+
+#Para separar en facetas un gráfico según las combinaciones
+#de dos variables, agrega facet_grid(). Esta vez, la fórmula
+#debe contener dos nombres de variables separados por un ~.
+
+ggplot(data=millas)+
+  geom_point(mapping = aes(x=cilindrada,y=autopista))+
+  facet_grid(traccion ~ cilindros )
+
+#Si prefieres no separar en facetas las filas o columnas, remplaza por un . 
+#el nombre de alguna de las variables, por ejemplo + facet_grid(. ~ cilindros).
+
+ggplot(data=millas)+
+  geom_point(mapping = aes(x=cilindrada,y=autopista))+
+  facet_grid(. ~ cilindros)
+
+
+#3.5.1 **Ejercicios**
+
+#1. ¿Qué ocurre si intentas separar en facetas una variable continua?
+
+
+ggplot(data=millas)+
+  geom_point(mapping=aes(x=cilindrada,y=autopista))+
+  facet_wrap(~ciudad, nrow=2)
+
+
+ggplot(data=millas)+
+  geom_point(mapping=aes(x=cilindrada,y=autopista))+
+  facet_grid(. ~ ciudad)
+
+#R. Si bien no existe algun error al correr la linea de codigo, la visualizacion
+#de las graficas generan una clasificacion por cada valor de la variable continua
+#Para este ejemplo, la visualizacion es correcta, pero si se tiene una variable con
+#valores de 0 a 1000 la grafica no se distinguiria de buena forma.
+
+#---------------------------------------------------------------------------------
+
+#2. ¿Qué significan las celdas vacías que aparecen en el gráfico generado usando 
+#facet_grid(traccion ~ cilindros)?
+
+millas
+
+ggplot(data=millas)+
+  geom_point(mapping = aes(x=cilindrada,y=autopista))+
+  facet_grid(traccion ~ cilindros)
+
+#R.Se refiere a que no existeun auto con cilindrada de 4 y 5 cilindros 
+#para recorrer de 20 a 40km con traccion t
+
+#¿Cómo se relacionan con este gráfico?
+
+ggplot(data = millas) +
+  geom_point(mapping = aes(x = traccion, y = cilindros))
+
+#R. Es la misma conclusion a la que se llega. ya que no hya puntos en los valores de
+#t para 4,5 y 6 cilindros
+
+#---------------------------------------------------------------------------------
+
+#3. ¿Qué grafica el siguiente código? ¿Qué hace . ?
+
+ggplot(data = millas) +
+  geom_point(mapping = aes(x = cilindrada, y = autopista)) +
+  facet_grid(traccion ~ .)
+
+#R. Clalsifica los valores de cilindrada vs autopista en relación con su
+#tracción. Las graficas aparecen en filas
+
+
+ggplot(data = millas) +
+  geom_point(mapping = aes(x = cilindrada, y = autopista)) +
+  facet_grid(. ~ cilindros)
+
+#R. Clasifica los valores de cilindrada vs autopista en relación con los
+#cilindros. Las graficas aparecen en columnas
+
+#---------------------------------------------------------------------------------
 
 
