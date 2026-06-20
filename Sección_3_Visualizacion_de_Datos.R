@@ -276,3 +276,178 @@ ggplot(data = millas) +
 #---------------------------------------------------------------------------------
 
 
+#3.6 **Objetos Geométricos**
+
+#Un geom es el objeto geométrico usado para representar datos de forma gráfica. 
+#La gente a menudo llama a los gráficos por el tipo de geom que utiliza.
+
+#Para cambiar el geom del gráfico, se modifica la función geom que acompaña a ggplot()
+
+# izquierda
+ggplot(data = millas) +
+  geom_point(mapping = aes(x = cilindrada, y = autopista))
+
+# derecha
+ggplot(data = millas) +
+  geom_smooth(mapping = aes(x = cilindrada, y = autopista))
+
+#Podemos cambiar el estilo de la linea, agregand un argumento sobre el plano aes
+
+ggplot(data=millas)+
+  geom_smooth(mapping = aes(x=cilindrada, y=autopista, linetype = traccion))
+
+#Muchos geoms, como geom_smooth(), usan un único objeto geométrico para mostrar
+#múltiples filas de datos. Con estos geoms, puedes asignar la estética 
+#de group (grupo) a una variable categórica para graficar múltiples objetos
+
+ggplot(data = millas) +
+  geom_smooth(mapping = aes(x = cilindrada, y = autopista))
+
+ggplot(data = millas) +
+  geom_smooth(mapping = aes(x = cilindrada, y = autopista, group = traccion))
+
+ggplot(data = millas) +
+  geom_smooth(
+    mapping = aes(x = cilindrada, y = autopista, color = traccion),
+    show.legend = TRUE
+  )
+
+
+#Para mostrar múltiples geoms en el mismo gráfico,
+#agrega varias funciones geom a ggplot()
+
+ggplot(data = millas) +
+  geom_point(mapping = aes(x = cilindrada, y = autopista))+
+  geom_smooth(mapping = aes(x = cilindrada, y = autopista))
+
+#Si se desea modificar una variable, deberas cambiarla en los dos tipos de geometria
+#pero existe una opcion que reduce el trabajo de la siguiente manera;
+
+ggplot(data = millas, mapping = aes(x = cilindrada, y = autopista)) +
+  geom_point() +
+  geom_smooth()
+
+#Si colocas mapeos en una función geom, ggplot2 los tratará como mapeos locales
+#para la capa. Estas asignaciones serán usadas para extender o sobrescribir 
+#los mapeos globales solo para esa capa. Esto permite mostrar diferentes
+#estéticas en diferentes capas.
+
+
+ggplot(data = millas, mapping = aes(x = cilindrada, y = autopista)) +
+  geom_point(mapping = aes(color = clase)) +
+  geom_smooth()
+
+
+#La misma idea se puede emplear para especificar distintos conjuntos de datos 
+#(data) para cada capa. En el siguiente caso, nuestra línea suave muestra
+#solo un subconjunto del conjunto de datos de millas: los autos subcompactos.
+#El argumento local de datos en geom_smooth() anula el argumento de datos
+#globales en ggplot() solo para esa capa.
+
+ggplot(data = millas, mapping = aes(x = cilindrada, y = autopista)) +
+  geom_point(mapping = aes(color = modelo)) +
+  geom_smooth(data = filter(millas, clase == "subcompacto"), se = FALSE)
+
+
+
+#3.6.1 **Ejercicios**
+
+
+#1. ¿Qué geom usarías para generar un gráfico de líneas?
+#¿Y para un diagrama de caja? ¿Y para un histograma? 
+#¿Y para un gráfico de área?
+
+ggplot(data=millas, mapping = aes(x=cilindrada, y=autopista))+
+  geom_line()
+
+
+ggplot(data=millas, mapping = aes(x=cilindrada, y=autopista))+
+  geom_boxplot()
+
+
+ggplot(data=millas, mapping = aes(x=fabricante, y=traccion))+
+  geom_histogram()
+
+ggplot(data=millas, mapping = aes(x=cilindrada, y=autopista))+
+  geom_area()
+
+#---------------------------------------------------------------------------
+
+#2. Ejecuta este código en tu mente y predice cómo se verá el output.
+#Luego, ejecuta el código en R y verifica tus predicciones.
+
+ggplot(data = millas, mapping = aes(x = cilindrada, y = autopista, color = traccion)) +
+  geom_point() +
+  geom_smooth(se = TRUE)
+
+#R. El grafico arrojara la geometria de puntos, una linea suave, donde se representa
+#si se desea o no colocar esa region de confianza para cada linea.
+
+
+#---------------------------------------------------------------------------
+
+#3. ¿Qué muestra show.legend = FALSE? ¿Qué pasa si lo quitas? 
+#¿Por qué crees que lo utilizamos antes en el capítulo?
+
+#R.Se utiliza esa linea de codigo para eliminar la leyenda o las etiquetas
+#de la variable que se desea analizar. Se utilizo en el capitulo, ya que a veces
+#deseamos omitir este dato, ya que se tiene por entendido del tipo de dato que 
+#estamos utilizando.
+
+#---------------------------------------------------------------------------
+
+#4. ¿Qué hace el argumento se en geom_smooth()?
+
+#R. esta pregunta se respondio en  2
+
+#---------------------------------------------------------------------------
+
+#5. ¿Se verán distintos estos gráficos? ¿Por qué sí o por qué no?
+
+ggplot(data = millas, mapping = aes(x = cilindrada, y = autopista)) +
+  geom_point() +
+  geom_smooth()
+
+
+ggplot() +
+  geom_point(data = millas, mapping = aes(x = cilindrada, y = autopista)) +
+  geom_smooth(data = millas, mapping = aes(x = cilindrada, y = autopista))
+
+
+#R. Son los mismos graficos, solo que el primer bloqu de codigo esta
+#mas simplificado que el segundo.
+
+#---------------------------------------------------------------------------
+
+#6. Recrea el código R necesario para generar los siguientes gráficos:
+
+ggplot(data = millas, mapping = aes(x = cilindrada, y = autopista)) +
+  geom_point() +
+  geom_smooth()
+
+ggplot(data = millas, mapping = aes(x = cilindrada, y = autopista)) +
+  geom_point() +
+  geom_smooth(mapping = aes(group=traccion) , se=FALSE)
+
+ggplot(data = millas, mapping = aes(x = cilindrada, y = autopista, color=traccion)) +
+  geom_point() +
+  geom_smooth(se=FALSE)
+
+
+ggplot(data = millas, mapping = aes(x = cilindrada, y = autopista)) +
+  geom_point(mapping=aes(color=traccion)) +
+  geom_smooth( )
+
+
+ggplot(data = millas, mapping = aes(x = cilindrada, y = autopista)) +
+  geom_point(mapping=aes(color=traccion)) +
+  geom_smooth( mapping=aes(linetype=traccion))
+
+ggplot(data = millas) +
+  geom_point(
+    mapping = aes(x = cilindrada, y = autopista, fill = traccion),
+    shape = 21,        # círculo con borde y relleno
+    color = "white",   # contorno blanco
+    size = 3           # tamaño de los puntos
+  )
+
