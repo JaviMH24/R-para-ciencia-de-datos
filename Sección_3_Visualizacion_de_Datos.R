@@ -451,3 +451,58 @@ ggplot(data = millas) +
     size = 3           # tamaño de los puntos
   )
 
+#3.7 Transformaciones estadisticas
+
+
+#Las transformaciones estaditicas nos ayudan a convertir datos que se pueden encontrar
+#tablas de datos a graficos de forma sencilla. Primero analizemos los graficos de barras
+
+
+#diamantes es un conjunto de datos que aparece en la libreria datos
+
+ggplot(data=diamantes)+
+  geom_bar(mapping=aes(x=corte))
+
+#Aqui la variable count que aparece al visualizar el grafico, no es del propio datasheet.
+#Esto lo genera de forma automatica R, ya que muchos gráficos, como los diagramas de 
+#dispersión (scatterplots), grafican los valores brutos de un conjunto de datos.
+
+
+#Los gráficos de barras, los histogramas y los polígonos de frecuencia almacenan los datos
+#o grafican los conteos por contenedores (bins), es decir, el número de puntos que caen
+#en cada contenedor.
+
+#Los gráficos de líneas suavizadas (smoothers) ajustan un modelo a los datos y luego 
+#grafican las predicciones del modelo.
+
+#Los diagramas de caja (boxplots) calculan un resumen robusto de la distribución y
+#luego muestran una caja con formato especial.
+
+#El algoritmo utilizado para calcular nuevos valores para un gráfico se llama stat,
+# abreviatura en inglés de transformación estadística (statistical transformation).
+
+?geom_bar
+
+
+
+#Por lo general, puedes usar geoms y estadísticas de forma intercambiable. Por ejemplo, 
+#puedes volver a crear la gráfica anterior usando stat_count() en lugar de geom_bar()
+
+
+ggplot(data=diamantes)+
+  stat_count(mapping=aes(corte))
+
+#Es posible que desees anular el mapeo predeterminado de las variables transformadas a 
+#las estéticas. Por ejemplo, es posible que desees mostrar un gráfico de barras de 
+#proporciones, en lugar de un recuento
+
+ggplot(data = diamantes) +
+  geom_bar(mapping = aes(x = corte, y = stat(prop), group = 1))
+
+?stat_bin
+
+
+
+
+
+
