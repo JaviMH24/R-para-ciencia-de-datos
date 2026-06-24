@@ -502,7 +502,73 @@ ggplot(data = diamantes) +
 ?stat_bin
 
 
+#Es posible que desees resaltar la transformación estadística en tu código. Por ejemplo,
+#puedes usar stat_summary(), que resume los valores de y para cada valor único de x,
+#para así resaltar el resumen que se está computando.
+
+
+ggplot(data=diamantes)+
+  stat_summary(mapping= aes(x=corte, y=profundidad), fun.min = min, fun.max = max, fun = median)
+
+
+?stat_bin
+
+#3.7.1 Ejercicios
+
+#1. ¿Cuál es el geom predeterminado asociado con stat_summary()? ¿Cómo podrías reescribir
+#el gráfico anterior para usar esa función geom en lugar de la función stat?
+
+ggplot(data=diamantes)+
+  stat_summary(
+    mapping=aes(x=corte, y=profundidad),
+    fun.min = min,
+    fun.max=max,
+    fun=median
+  )
+
+?stat_summary
+
+#R. El geom prdeterminado para stat:summary() es la geometria asociada con geom_point()
+
+ggplot(data=diamantes)+
+  geom_point(mapping=aes(x=corte, y=profundidad, color=profundidad))
+
+#----------------------------------------------------------------------------------------------
+
+#2.¿Qué hace geom_col()? ¿En qué se diferencia de geom_bar()?
+
+
+#Revisarrr
+ggplot(data=diamantes)+
+  geom_col()
+ 
+
+ggplot(data=diamantes)+
+  geom_bar()
+
+?geom_bar
+
+#----------------------------------------------------------------------------------------------
+
+#3. La mayoría de los geoms y las transformaciones estadísticas vienen en pares que casi
+#siempre se usan en conjunto. Lee la documentación y haz una lista de todos los pares.
+#¿Qué tienen en común?
+
+?geom_area
+
+
+#----------------------------------------------------------------------------------------------
+
+#4. ¿Qué variables calcula stat_smooth()? ¿Qué parámetros controlan su comportamiento?
 
 
 
 
+?stat_smooth
+
+#----------------------------------------------------------------------------------------------
+
+#5. En nuestro gráfico de barras de proporción necesitamos establecer group = 1. ¿Por qué?
+#En otras palabras, ¿cuál es el problema con estos dos gráficos?
+
+#----------------------------------------------------------------------------------------------
