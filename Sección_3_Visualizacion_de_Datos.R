@@ -538,15 +538,18 @@ ggplot(data=diamantes)+
 #2.¿Qué hace geom_col()? ¿En qué se diferencia de geom_bar()?
 
 
+?diamantes
+
 #Revisarrr
-ggplot(data=diamantes)+
-  geom_col()
+ggplot(data = diamantes) +
+  geom_col(aes(x = claridad, y = profundidad))
+
  
+ggplot(data = diamantes) +
+  geom_bar(aes(x = profundidad))
 
-ggplot(data=diamantes)+
-  geom_bar()
-
-?geom_bar
+#R. Mientras que en geom_col se puede comparar dos datos categoricos, en geom_bar no es así,
+#ya que de forma predeterminada compara la variable categorica con la variable count
 
 #----------------------------------------------------------------------------------------------
 
@@ -561,14 +564,77 @@ ggplot(data=diamantes)+
 
 #4. ¿Qué variables calcula stat_smooth()? ¿Qué parámetros controlan su comportamiento?
 
-
-
-
 ?stat_smooth
+
+#R. y → el valor ajustado de la curva de suavizado (la predicción del modelo).
+
+#ymin → límite inferior del intervalo de confianza.
+
+#ymax → límite superior del intervalo de confianza.
+
+#se → error estándar de la estimación.
+
+#Estas variables permiten dibujar la línea suavizada y la banda de confianza alrededor de la
+# linea.
 
 #----------------------------------------------------------------------------------------------
 
 #5. En nuestro gráfico de barras de proporción necesitamos establecer group = 1. ¿Por qué?
 #En otras palabras, ¿cuál es el problema con estos dos gráficos?
 
+ggplot(data = diamantes)+
+  geom_bar(mapping = aes(x = corte, y = after_stat(prop), group=1))
+           
+ggplot(data = diamantes) +
+  geom_bar(mapping = aes(x = corte, fill = color, y = after_stat(prop)), group=1)
+
+#R. Sin group=1 → proporciones internas por categoría (todas las barras = 1).
+#Con group=1 → proporciones globales (barras reflejan la fracción de cada categoría 
+#en el total).
+
+
 #----------------------------------------------------------------------------------------------
+
+# **Seccion 3.8 Ajustes de Posicion**
+
+
+# Se puede colorear un gráfico de barras usando tanto la estética de color
+#como la más útil  que es "fill" (relleno):
+
+ggplot(data=diamantes)+
+  geom_bar(mapping = aes(x=corte, colour = corte))
+
+ggplot(data=diamantes)+
+  geom_bar(mapping = aes(x=corte, fill = corte))
+
+
+#Observemos lo que sucede cuando se asigna la estética de relleno (fill) a otra variable, como claridad: 
+#las barras se apilan automáticamente. Cada rectángulo de color representa una combinación de 
+#corte y claridad
+
+
+ggplot(data=diamantes)+
+  geom_bar(mapping = aes(x=corte, fill = claridad))
+
+
+# **TIPOS DE APILAMIENTOS**
+
+#El apilamiento se realiza automáticamente mediante el ajuste de posición especificado por 
+#el argumento position. Si no SE desea un gráfico de barras apiladO ("stack"), se puede alternar
+#en una de las otras tres opciones: "identity", "dodge" o "fill".
+
+#Apilamiento fill
+
+#position = "identity" colocará cada objeto exactamente donde cae en el contexto del gráfico.
+#Esto no es muy útil al momento de graficar barras, ya que las superpone. Para ver esa 
+#superposición, debemos hacer que las barras sean ligeramente transparentes configurando 
+#el alpha a un valor pequeño, o completamente transparente al establecer fill = NA
+
+ggplot(data = diamantes, mapping = aes(x = corte, fill = claridad)) +
+  geom_bar(alpha = 1/5, position = "identity")
+
+ggplot(data = diamantes, mapping = aes(x = corte, colour = claridad)) +
+  geom_bar(fill = NA, position = "identity")
+
+
+
