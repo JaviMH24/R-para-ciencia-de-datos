@@ -601,6 +601,8 @@ ggplot(data = diamantes) +
 # Se puede colorear un gráfico de barras usando tanto la estética de color
 #como la más útil  que es "fill" (relleno):
 
+diamantes
+
 ggplot(data=diamantes)+
   geom_bar(mapping = aes(x=corte, colour = corte))
 
@@ -623,7 +625,7 @@ ggplot(data=diamantes)+
 #el argumento position. Si no SE desea un gráfico de barras apiladO ("stack"), se puede alternar
 #en una de las otras tres opciones: "identity", "dodge" o "fill".
 
-#Apilamiento fill
+#Apilamiento identity
 
 #position = "identity" colocará cada objeto exactamente donde cae en el contexto del gráfico.
 #Esto no es muy útil al momento de graficar barras, ya que las superpone. Para ver esa 
@@ -637,4 +639,106 @@ ggplot(data = diamantes, mapping = aes(x = corte, colour = claridad)) +
   geom_bar(fill = NA, position = "identity")
 
 
+#Apilamiento fill
 
+
+#position = "fill" funciona como el apilamiento de position = "stack", pero hace que cada
+#conjunto de barras apiladas tenga la misma altura. Esto hace que sea más fácil comparar
+#proporciones entre grupos.
+
+
+ggplot(data=diamantes)+
+  geom_bar(mapping = aes(x=corte, fill = claridad), position = "fill")
+
+
+#Apilamiento dodge
+
+#position = "dodge" coloca los objetos superpuestos uno al lado del otro.
+#Esto hace que sea más fácil comparar valores individuales.
+
+ggplot(data=diamantes)+
+  geom_bar(mapping = aes(x=corte, fill = claridad), position = "dodge")
+
+#AJUSTE EXTRA PARA GRAFICOS DE DISPERSION
+
+#Hay otro tipo de ajuste que no es útil para gráficos de barras, pero que puede
+#ser muy útil para diagramas de dispersión. Recuerda nuestro primer diagrama de
+#dispersión. ¿Notaste que mostraba solo 126 puntos, a pesar de que hay 234
+#observaciones en el conjunto de datos?
+
+
+#Los valores de las variables autopista y cilindrada se redondean de modo que los
+#puntos aparecen en una cuadrícula y muchos se superponen entre sí. Este problema 
+#se conoce como solapamiento (overplotting). Esta disposición hace que sea difícil
+#ver dónde está la masa de datos.
+
+
+#Puedes evitar esto estableciendo el ajuste de posición en “jitter”. position = "jitter" 
+#agrega una pequeña cantidad de ruido aleatorio a cada punto. Esto dispersa los puntos,
+#ya que es poco probable que dos puntos reciban la misma cantidad de ruido aleatorio.
+
+ggplot(data = millas) +
+  geom_point(mapping = aes(x = cilindrada, y = autopista))
+
+ggplot(data = millas) +
+  geom_point(mapping = aes(x = cilindrada, y = autopista), position = "jitter")
+
+#-----------------------------------------------------------------------------------------
+
+# **3.8.1 EJERCICIOS**
+
+#1. ¿Cuál es el problema con este gráfico? ¿Cómo podrías mejorarlo?
+
+ggplot(data = millas, mapping = aes(x = ciudad, y = autopista)) +
+  geom_point()
+
+#R. existe un overplotting, para ello cambiamos la forma de la geometria por geom_jitter
+
+ggplot(data = millas, mapping = aes(x = ciudad, y = autopista)) +
+  geom_jitter()
+
+#-----------------------------------------------------------------------------------------
+
+#2. ¿Qué parámetros de geom_jitter() controlan la cantidad de ruido?
+
+?geom_jitter
+
+#R. los parámetros que controlan la cantidad de ruido (es decir, cuánto se dispersan los 
+#puntos respecto a su posición original) son:
+
+#width controla el rango de desplazamiento aleatorio en el eje x.
+
+#height controla el rango de desplazamiento aleatorio en el eje y.
+
+#Por defecto, ambos tienen valores pequeños (aproximadamente 0.4 en x y 0.4 en y),
+#lo que añade un ligero “temblor” para evitar el solapamiento de puntos.
+#Si aumentas estos valores, el ruido será mayor y los puntos se dispersarán más;
+#si los reduces, el jitter será mínimo y los puntos quedarán casi en su posición original.
+
+#-----------------------------------------------------------------------------------------
+#3. Compara y contrasta geom_jitter() con geom_count()
+
+ggplot(data = millas, mapping = aes(x=ciudad, y=autopista))+
+  geom_jitter()
+
+ggplot(data = millas, mapping = aes(x=ciudad, y=autopista))+
+  geom_count()
+
+#R. mientras que geom_jitter genera un ruido sobre la relacion entre ciudad vs autopista
+# geom_count contabiliza los objetos en donde su concentramiento es demasiado provocando
+#que no se puedan distinguir a simple vista.
+#-----------------------------------------------------------------------------------------
+
+#4. ¿Cuál es el ajuste de posición predeterminado de geom_boxplot()? Crea una visualización
+#del conjunto de datos de millas que lo demuestre.
+
+?geom_boxplot
+
+ggplot(data = millas)+
+  geom_col(mapping = aes(x=ciudad, y=autopista, fill =ciudad), position = "dodge2")
+
+
+ggplot(data = millas, mapping = aes(x=ciudad, y=autopista))+
+  geom_boxplot()
+
+#-----------------------------------------------------------------------------------------
