@@ -742,3 +742,146 @@ ggplot(data = millas, mapping = aes(x=ciudad, y=autopista))+
   geom_boxplot()
 
 #-----------------------------------------------------------------------------------------
+
+
+# **Sección 3.9 Sistemas de Coordendas**
+
+#Los sistemas de coordenadas son probablemente la parte más complicada de ggplot2. El 
+#sistema predeterminado es el sistema de coordenadas cartesianas, donde las posiciones 
+#x e y actúan independientemente para determinar la ubicación de cada punto. Hay varios
+#otros sistemas de coordenadas que ocasionalmente son útiles.
+
+
+#coord_flip() cambia los ejes x e y. Esto es útil, por ejemplo, si quieres diagramas de 
+#caja horizontales. También es útil para etiquetas largas: es difícil ajustarlas sin que 
+#se superpongan en el eje x.
+
+
+ggplot(data = millas, mapping = aes(x = clase, y = autopista)) +
+  geom_boxplot()
+
+ggplot(data = millas, mapping = aes(x = clase, y = autopista)) +
+  geom_boxplot() +
+  coord_flip()
+
+#coord_polar() usa coordenadas polares. Las coordenadas polares revelan una conexión
+#interesante entre un gráfico de barras y un gráfico de Coxcomb.
+
+bar <- ggplot(data = diamantes) +
+  geom_bar( mapping = aes(x = corte, fill = corte), show.legend = FALSE, width = 1) +
+  theme(aspect.ratio = 1) +
+  labs(x = NULL, y = NULL)
+
+bar + coord_flip()
+bar + coord_polar()
+
+#3.9.1 **Ejercicios**
+
+#1. Convierte un gráfico de barras apiladas en un gráfico circular usando coord_polar().
+
+millas
+
+ggplot(data=millas)+
+  geom_bar(mapping=aes(x=cilindrada, fill=traccion))
+
+bar <- ggplot(data=millas)+
+  geom_bar(mapping=aes(x=cilindrada, fill=traccion))+
+  theme(aspect.ratio = 1)+
+  labs(x=NULL, y=NULL)
+
+bar + coord_flip()
+bar + coord_polar()
+  
+#-----------------------------------------------------------------------------------------
+
+#2. ¿Qué hace labs()?
+
+?labs
+
+#la función labs() se utiliza dentro de ggplot2 para modificar las etiquetas de los elementos
+#de una gráfica. Es una forma elegante de ajustar títulos y nombres de ejes sin tener que 
+#usar funciones separadas como xlab(), ylab() o ggtitle()
+
+
+#Ejemplo:
+
+ggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +
+  geom_point() +
+  labs(
+    title = "Relación entre peso y rendimiento",
+    subtitle = "Datos del conjunto mtcars",
+    x = "Peso del vehículo",
+    y = "Millas por galón",
+    color = "Número de cilindros",
+    caption = "Fuente: Motor Trend (1974)"
+  )
+
+
+#-----------------------------------------------------------------------------------------
+
+#3. ¿Cuál es la diferencia entre coord_quickmap() y coord_map()?
+
+
+#coord_quickmap()
+
+#Ajusta automáticamente la relación de aspecto entre los ejes x (longitud) y y (latitud)
+#para que las distancias en el mapa sean proporcionales.
+
+#Es rápido y ligero, porque simplemente fija la escala sin aplicar una proyección cartográfica
+#compleja.
+
+#Ideal para mapas sencillos donde solo necesitas que las proporciones se vean correctas
+
+
+#coord_map()
+
+#Permite aplicar proyecciones cartográficas reales (como Mercator, Albers, etc.).
+
+#Más preciso para representar áreas grandes o cuando la curvatura de la Tierra importa.
+
+#Es más lento, porque realiza cálculos de transformación de coordenadas.
+
+#Se usa cuando necesitas un mapa con fidelidad geográfica y no solo proporciones correctas.
+
+#-----------------------------------------------------------------------------------------
+
+#¿Qué te dice la gráfica siguiente sobre la relación entre ciudad y autopista? ¿Por qué es 
+#coord_fixed() importante? ¿Qué hace geom_abline()?
+
+ggplot(data = millas, mapping = aes(x = ciudad, y = autopista)) +
+  geom_point() +
+  geom_abline()+
+  coord_fixed()
+
+#R. suele mostrar una relación positiva: los autos que gastan más gasolina en ciudad también
+#tienden a gastar más en autopista. Sin embargo, la pendiente no es exactamente 1, lo que 
+#indica que el consumo no aumenta de manera idéntica en ambos contextos.
+
+#coord_fixed()
+
+#asegura que las unidades en el eje X y el eje Y tengan la misma escala.
+#Esto es crucial porque si un eje se estira más que el otro, la línea de pendiente 1
+#(la diagonal) se vería inclinada artificialmente y la comparación perdería sentido.
+
+#En mapas y en gráficas de comparación como esta, mantener proporciones reales evita 
+#interpretaciones engañosas.
+
+#geom_abline()
+
+#Dibuja una línea recta definida por una pendiente (slope) y una intersección (intercept).
+#En este caso, se usa para trazar la línea de referencia con pendiente 1 e intercepto 0
+
+#Los puntos arriba de la línea indican autos que consumen más en ciudad que en carretera,
+#y los debajo lo contrario.
+
+
+
+#-----------------------------------------------------------------------------------------
+
+
+
+#-----------------------------------------------------------------------------------------
+
+
+#-----------------------------------------------------------------------------------------
+
