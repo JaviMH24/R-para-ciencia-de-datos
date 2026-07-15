@@ -51,3 +51,98 @@ este_es_un_nombre_largo <- 2.5
 
 este_es_un_nombre_largo
 
+# **Sección 4.3 Usanfo Funciones**
+
+#R contiene diversas funciones intregradas
+#su sintaxis es de la forma:
+
+nombre_de_la_funcion(arg=val1, arg2=val2, ...)
+
+
+#Un ejemplo de ellas, es la siguiente:
+seq(1,10)
+
+# R nos puede ayudar a autocompletar, por ejemplo
+#con las comillas:
+
+x <- "hola mundo"
+
+#puede ocurrir que nos enredemos y terminemos con 
+#una disparidad. Si esto ocurre R te mostrará el
+#caracter de continuación “+”
+
+#El + te indica que R está esperando que completes
+#la instrucción; no cree que hayas terminado.
+#Usualmente esto implica que olvidaste escribir " o ). 
+#Puedes agregar el caracter par faltante o presionar 
+#ESCAPE para abandonar la expresión y escribirla de nuevo.
+
+z <- "hola" #quitar comilla al final para que al correr
+#se muestre el signo +
+
+#Cuando realizas una asignación no se imprime en la consola 
+#el valor asignado. Es una tentación confirmar inmediatamente
+#el resultado:
+
+y <- seq(1,10,length.out=5)
+y
+
+
+#Esta acción común puede acortarse rodeando la instrucción con 
+#paréntesis, lo que resulta en una asignación e “impresión en
+#la pantalla”.
+
+(y <- seq(1,10 ,length.out=5))
+
+#---------------------------------------------------------------
+
+# ** Sección 4.4 EJercicios**
+
+#1.¿Por qué no funciona este código?
+
+mi_variable <- 10
+mi_varıable
+
+#R. Debido a que el caracter i e ı, son distintos por lo que R
+# no reconoce la variable que se creo
+
+#---------------------------------------------------------------
+
+#2. Modifica cada una de las instrucciones de R a continuación para
+#que puedan ejecutarse correctamente:
+
+library(tidyverse)
+
+ggplot(dota = millas) + 
+  geom_point(mapping = aes(x = cilindrada, y = autopista))
+
+fliter(millas, cilindros = 8)
+filter(diamante, quilate > 3)
+
+#CORRECCIÓN
+
+install.packages("datos")
+
+library(tidyverse)
+library(datos)
+
+millas
+
+ggplot(data = millas) + 
+  geom_point(mapping = aes(x = cilindrada, y = autopista))
+
+filter(millas, cilindros == 8)
+filter(diamante, quilate > 3)
+
+
+#---------------------------------------------------------------
+
+#3.Presiona Alt + Shift + K. ¿Qué ocurrió? ¿Cómo puedes llegar al
+#mismo lugar utilizando los menús?
+
+#Con el teclado Ctrl + 10
+
+#---------------------------------------------------------------
+
+
+
