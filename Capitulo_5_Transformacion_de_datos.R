@@ -143,3 +143,55 @@ NA == NA
 x <- NA
 
 is.na(x)
+
+#---------------------------------------------------------------------------------------------------------------------------------------
+
+#Seccion 5.2.4 **Ejercicios**
+
+#Encuentra todos los vuelos que:
+
+#Tuvieron un retraso de llegada de dos o más horas
+
+view(vuelos)
+
+(filter(vuelos, atraso_llegada == 2 | atraso_llegada>2) )
+
+#Volaron a Houston (IAH o HOU)
+
+?vuelos
+
+?aeropuertos
+
+filter(vuelos, destino=="IAH" | destino=="HOU")
+
+#Fueron operados por United, American o Delta
+
+#Esta linea de codigo no funcon es por ello que se utiliza %in%
+
+#checar
+
+filter(vuelos, aerolineas== "AA" | aerolineas== "DL" | aerolineas== "UA")
+
+filter(aerolineas %in% c("AA", "DL", "UA"))
+
+
+#Partieron en invierno del hemisferio sur (julio, agosto y septiembre)
+
+filter(vuelos, mes==7 | mes==8 | mes==9)
+
+
+#Llegaron más de dos horas tarde, pero no salieron tarde
+
+
+filter(vuelos, atraso_llegada==2 &  atraso_salida==0)
+
+#Se retrasaron por lo menos una hora, pero repusieron más de 30 minutos
+#en vuelo
+
+filter(vuelos, !(atraso_salida==1) & atraso_llegada==-0.5)
+
+#Partieron entre la medianoche y las 6 a.m. (incluyente)
+
+?vuelos
+
+(filter(vuelos, horario_salida==0000 & horario_salida==0600))
