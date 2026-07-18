@@ -88,5 +88,58 @@ near(sqrt(2)^2, 2)
 
 near((1 / 49 )* 49 , 1)
 
+#-------------------------------------------------------------------------------------------------------------
+
+#Seccion 5.2.2 **Operadores Lógicos**
+
+#cada expresión debe ser verdadera para que una fila se incluya en el output. Para otros tipos de combinaciones
+#necesitarás usar operadores Booleanos: & es “y”, | es “o”, y ! es “no”.
 
 
+#El siguiente código sirve para encontrar todos los vuelos que partieron en noviembre o diciembre:
+
+filter(vuelos, mes==1 | mes ==12)
+
+#El orden de las operaciones no funciona como en español. No puedes escribir filter(vuelos, mes == (11 | 12)), que
+#literalmente puede traducirse como “encuentra todos los vuelos que partieron en noviembre o diciembre”. En cambio,
+#encontrará todos los meses que son iguales a 11 | 12, una expresión que resulta en ‘TRUE’ (verdadero). En un contexto 
+#numérico (como aquí), ‘TRUE’ se convierte en uno, por lo que encuentra todos los vuelos en enero, no en noviembre o diciembre.
+#¡Esto es bastante confuso!
+
+
+#Una manera rápida y útil para resolver este problema es x %in% y (es decir, x en y). Esto seleccionará cada fila donde x es uno
+#de los valores eny. Podríamos usarlo para reescribir el código de arriba:
+
+nov_dic <-  filter(vuelos, mes %in% c(11,12))
+
+#A veces puedes simplificar subconjuntos complicados al recordar la ley de De Morgan: !(x & y) es lo mismo que !x | !y, y !(x | y)
+#es lo mismo que !x & !y. Por ejemplo, si deseas encontrar vuelos que no se retrasaron (en llegada o partida) en más de dos horas,
+#puedes usar cualquiera de los dos filtros siguientes:
+
+filter(vuelos, !(atraso_llegada > 120 | atraso_salida > 120))
+filter(vuelos  , atraso_llegada <= 120, atraso_salida <= 120)
+
+#------------------------------------------------------------------------------------------------------------------------------------
+
+#Sección 5.2.3 **Valores faltantes**
+
+#Una característica importante de R que puede hacer que la comparación sea difícil son los valores faltantes, o NAs (del inglés “no disponibles”).
+#NA representa un valor desconocido, lo que hace que los valores perdidos sean “contagiosos”: casi cualquier operación que involucre un valor
+#desconocido también será desconocida.
+
+NA > 5
+
+NA == 10
+
+NA+10
+
+NA/2
+
+NA == NA
+
+#Si para una variable que hayas definido, deseas
+#verificar si falta un valor, usa is.na()
+
+x <- NA
+
+is.na(x)
