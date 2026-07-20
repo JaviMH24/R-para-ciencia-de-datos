@@ -195,3 +195,49 @@ filter(vuelos, !(atraso_salida==1) & atraso_llegada==-0.5)
 ?vuelos
 
 (filter(vuelos, horario_salida==0000 & horario_salida==0600))
+
+#-----------------------------------------------------------------------------
+
+#2. Otra función de dplyr que es útil para usar filtros es between(). ¿Qué hace?
+#¿Puedes usarla para simplificar el código necesario para responder a los desafíos anteriores?
+
+?between()
+
+#R. la función between() se utiliza para verificar si un valor (o un vector de valores) se
+#encuentra dentro de un rango definido por dos límites. Es parte del paquete dplyr, y resulta
+#muy práctica porque evita tener que escribir comparaciones largas con >= y <=
+
+#sintaxis
+between(x, left, right)
+
+#x: el vector o columna que quieres evaluar.
+
+#left: límite inferior del rango.
+
+#right: límite superior del rango.
+
+#La función devuelve un vector lógico (TRUE o FALSE) indicando si cada elemento de x está dentro
+#del rango [left, right]
+
+
+#-------------------------------------------------------------------------------------------------
+
+#3.¿Cuántos vuelos tienen datos faltantes en horario_salida? ¿Qué otras variables tienen valores
+#faltantes?
+
+# Número de vuelos con NA en horario de salida
+nrow(filter(vuelos, is.na(horario_salida)))
+
+vuelos %>% 
+  summarise(across(everything(), ~sum(is.na(.))))
+
+#-------------------------------------------------------------------------------------------------
+
+#4. ¿Por qué NA ^ 0 no es faltante? ¿Por qué NA | TRUE no es faltante? ¿Por qué FALSE & NA no es faltante?
+#¿Puedes descubrir la regla general? (¡NA * 0 es un contraejemplo complicado!
+
+#R.R devuelve un valor conocido cuando la operación es determinística independientemente del valor faltante.
+#Si el resultado depende de saber el valor de NA, entonces se propaga y devuelve NA
+
+#El caso particular de NA * 0 sí depende del valor que puede tomar NA: si NA fuera 0, el resultado sería 0;
+#si fuera otro número, sería distinto. Como no se puede decidir sin conocer el valor, R devuelve NA
