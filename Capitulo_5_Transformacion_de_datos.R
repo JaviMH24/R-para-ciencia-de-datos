@@ -241,3 +241,53 @@ vuelos %>%
 
 #El caso particular de NA * 0 sí depende del valor que puede tomar NA: si NA fuera 0, el resultado sería 0;
 #si fuera otro número, sería distinto. Como no se puede decidir sin conocer el valor, R devuelve NA
+
+
+
+#Seccion 5.4 **Seleccionar columnas con select()**
+
+# En la mayoria de las bases de datos el conjunto de datos que se encuentran en este es de cientos o incluso de
+#miles de variables. En este caso, el primer desafío a menudo se reduce a las variables que realmente te interesan.
+#select() permite seleccionar rápidamente un subconjunto útil utilizando operaciones basadas en los nombres de las variables.
+
+
+
+library(datos)
+library(tidyverse)
+
+## Seleccionar columnas por nombre
+select(vuelos, anio, mes, dia)
+
+
+# Seleccionar todas las columnas entre anio y dia (incluyente)
+select(vuelos, anio:dia)
+
+
+# Seleccionar todas las columnas excepto aquellas entre anio en dia (incluyente)
+select(vuelos, -(anio:dia))
+
+#Operaciones complementarias dentro la función select()
+
+#starts_with("abc"): coincide con los nombres que comienzan con “abc”.
+
+#ends_with("xyz"): coincide con los nombres que terminan con “xyz”.
+
+#contains("ijk"): coincide con los nombres que contienen “ijk”.
+
+#matches("(.)\\1"): selecciona variables que coinciden con una expresión regular.
+#Esta en particular coincide con cualquier variable que contenga caracteres repetidos.
+#Aprenderás más sobre expresiones regulares en [Cadenas de caracteres].
+
+#num_range("x", 1:3): coincide con x1,x2 y x3.
+
+
+#Se puede utilizar rename(), que es una variante de select() que mantiene todas las variables que no se mencionan explícitamente.
+
+rename(vuelos, cola_num=codigo_cola)
+
+
+#Otra opción es usar select() junto con el auxiliar everything() (todo, en inglés). Esto es útil si se cuenta con un grupo de variables
+#que te gustaría mover al comienzo del data frame.
+
+
+select(vuelos, fecha_hora, tiempo_vuelo, everything())
