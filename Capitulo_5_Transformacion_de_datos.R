@@ -263,7 +263,7 @@ select(vuelos, anio, mes, dia)
 select(vuelos, anio:dia)
 
 
-# Seleccionar todas las columnas excepto aquellas entre anio en dia (incluyente)
+# Seleccionar todas las columnas excepto aquellas entre anio y dia (incluyente)
 select(vuelos, -(anio:dia))
 
 #Operaciones complementarias dentro la función select()
@@ -291,3 +291,62 @@ rename(vuelos, cola_num=codigo_cola)
 
 
 select(vuelos, fecha_hora, tiempo_vuelo, everything())
+
+#------------------------------------------------------------------------------------------------
+
+# 5.4.1 **Ejercicios**
+
+#1. Haz una lluvia de ideas sobre tantas maneras como sea posible para seleccionar
+#horario_salida,atraso_salida,horario_llegada, y atraso_llegada de vuelos.
+
+select(vuelos, salida_programada)
+
+select(vuelos, starts_with("atr") & ends_with("ida") )
+
+select(vuelos, atraso_salida:llegada_programada)
+
+select(vuelos, atraso_llegada, everything())
+
+#----------------------------------------------------------------------------------------------
+
+#2. ¿Qué sucede si incluyes el nombre de una variable varias veces en una llamada a select()?
+
+select(vuelos, horario_llegada, horario_llegada, horario_llegada)
+
+#R. Solo se imprimirá una vez la variable a la que se llama, no se duplica ni triplica en la nueva
+#base de datos.
+
+#----------------------------------------------------------------------------------------------
+
+#3. ¿Qué hace la función any_of()? ¡¿Por qué podría ser útil en conjunto con este vector?
+
+vars <- c ("anio", "mes", "dia", "atraso_salida", "atraso_llegada")
+
+?any_of
+
+#R. La función any_of() en dplyr sirve para seleccionar columnas dentro de un data.frame o tibble usando un
+#vector de nombres de variables. Es especialmente útil cuando ya tienes definido un conjunto de nombres 
+#en un objeto (como tu vector vars) y quieres aplicarlos en operaciones de manipulación de datos sin 
+#tener que escribirlos uno por uno.
+
+
+vars <- c("anio", "mes", "dia", "atraso_salida", "atraso_llegada")
+
+vuelos %>%
+  select(any_of(vars))
+
+#-----------------------------------------------------------------------------------------------
+
+#4. ¿Te sorprende el resultado de ejecutar el siguiente código? ¿Cómo tratan por defecto las funciones auxiliares
+#de select() a las palabras en mayúsculas o en minúsculas? ¿Cómo puedes cambiar ese comportamiento
+#predeterminado?
+
+select(vuelos, contains("SALIDA"))
+
+#R. Las variables mayusculas y minusculas las toma como lo mismo, sin compararlas. 
+# Para hacer que sea sensible a miniscilas, se coloca el siguiente comando:
+
+#ignore.case = TRUE (valor por defecto): ignora diferencias entre mayúsculas y minúsculas.
+
+#ignore.case = FALSE: exige coincidencia exacta en el uso de mayúsculas/minúsculas.
+
