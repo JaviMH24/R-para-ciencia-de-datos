@@ -44,7 +44,7 @@ View(vuelos)
 
 #Todas estas funciones se pueden usar junto con group_by() (del inglés agrupar por),
 #que cambia el alcance de cada función para que actúe ya no sobre todo el conjunto de datos
-#sino de grupo en grupo. Estas seis funciones proporcionan los verbos para este lenguaje de manipulación de datos.
+#sino de grupo en grupo.
 
 #-----------------------------------------------------------------------------------------
 
@@ -70,7 +70,7 @@ ene1 <- filter(vuelos, mes==1, dia==1)
 #los operadores de comparación. R proporciona el conjunto estándar: >, >=, <, <=, != (no igual) e == (igual).
 
 
-# Siemore se utilizará el operador == de igualdad, si sea utiliza solamente =, R lanzará una advertencia
+# Siempre se utilizará el operador == de igualdad, si se utiliza solamente =, R lanzará una advertencia
 
 # Hay otro problema común que se puede encontrar al usar ==: los números de coma flotante.
 
@@ -78,9 +78,9 @@ sqrt(2)^2==2
 
 (1 / 49 )* 49 == 1
 
-#Debido a que la computadora trabajar con numeros de decimal finito, ses abe que las raices junto
-# con fracciones pueden albergar una cantidad infitira de decimales, lo que generaria solo una aproximación
-# a la cantidad que se desea, es por ello que R necesita dsaber esto, por ello, antes de crear una
+#Debido a que la computadora trabaja con numeros de decimal finito, se sabe que las raices junto
+# con fracciones pueden albergar una cantidad infinita de decimales, lo que generaria solo una aproximación
+# a la cantidad que se desea, es por ello que R necesita saber esto, por ello, antes de crear una
 #comparacion como la anterior, utilizamos la funcion near() para que R sepa que es una aproximacion:
 
 #Ojo checa la sintaxis
@@ -108,7 +108,7 @@ filter(vuelos, mes==1 | mes ==12)
 
 
 #Una manera rápida y útil para resolver este problema es x %in% y (es decir, x en y). Esto seleccionará cada fila donde x es uno
-#de los valores eny. Podríamos usarlo para reescribir el código de arriba:
+#de los valores en y. Podríamos usarlo para reescribir el código de arriba:
 
 nov_dic <-  filter(vuelos, mes %in% c(11,12))
 
@@ -236,7 +236,7 @@ vuelos %>%
 #4. ¿Por qué NA ^ 0 no es faltante? ¿Por qué NA | TRUE no es faltante? ¿Por qué FALSE & NA no es faltante?
 #¿Puedes descubrir la regla general? (¡NA * 0 es un contraejemplo complicado!
 
-#R.R devuelve un valor conocido cuando la operación es determinística independientemente del valor faltante.
+#R. R devuelve un valor conocido cuando la operación es determinística independientemente del valor faltante.
 #Si el resultado depende de saber el valor de NA, entonces se propaga y devuelve NA
 
 #El caso particular de NA * 0 sí depende del valor que puede tomar NA: si NA fuera 0, el resultado sería 0;
@@ -344,9 +344,89 @@ vuelos %>%
 select(vuelos, contains("SALIDA"))
 
 #R. Las variables mayusculas y minusculas las toma como lo mismo, sin compararlas. 
-# Para hacer que sea sensible a miniscilas, se coloca el siguiente comando:
+# Para hacer que sea sensible a minusculas, se coloca el siguiente comando:
 
 #ignore.case = TRUE (valor por defecto): ignora diferencias entre mayúsculas y minúsculas.
 
 #ignore.case = FALSE: exige coincidencia exacta en el uso de mayúsculas/minúsculas.
 
+#-------------------------------------------------------------------------------------------------
+
+# Seccion 5.5 **Añadir nuevas variables con mutate()**
+
+#Además de seleccionar conjuntos de columnas existentes, a menudo es útil crear nuevas columnas en
+#función de columnas existentes. Ese es el trabajo de mutate() (del inglés mutar o transformar).
+
+
+#mutate() siempre agrega nuevas columnas al final de un conjunto de datos, así que comenzaremos creando
+#un conjunto de datos más pequeño para que podamos ver las nuevas variables. 
+
+vuelos_sml <- select(vuelos, anio:dia, starts_with("atraso"),distancia, tiempo_vuelo)
+
+vuelos_sml
+
+#De esta forma mutamos o creamos una columna 
+mutate(vuelos_sml, ganancia = atraso_salida - atraso_llegada, velocidad = distancia / tiempo_vuelo * 60)
+
+#Hay que tomar en cuenta que puedes hacer referencia a las columnas que se acaban de crear:
+mutate(vuelos_sml, ganancia = atraso_salida - atraso_llegada, horas = tiempo_vuelo / 60,
+       ganacia_por_hora = ganancia / horas)
+
+#Si solo deseas que en el data frame aparezcan las nuevas variables, se debe utilizar la función
+#transmute()
+
+transmute(vuelos,
+          ganancia = atraso_salida - atraso_llegada,
+          horas = tiempo_vuelo / 60,
+          ganancia_por_hora = ganancia / horas
+)
+
+#Sección 5.5.1 **Funciones de Creacion**
+
+#Hay muchas funciones para crear nuevas variables que se pueden utilizar con mutate(). La propiedad clave es 
+#que la función debe ser vectorizada: debe tomar un vector de valores como input, y devolver un vector 
+#con el mismo número de valores como output.
+
+#No hay forma de enumerar todas las posibles funciones que podrías usar, pero aquí hay una selección de funciones
+#que frecuentemente son útiles:
+
+
+# **Operadores aritméticos**: +, -,*,/,^. Todos están vectorizados usando las llamadas “reglas de reciclaje”.
+#Si un parámetro es más corto que el otro, se extenderá automáticamente para tener la misma longitud. Esto es muy útil
+#cuando uno de los argumentos es un solo número.
+
+
+# **Aritmética modular**: %/% (división entera) y %% (resto), donde x == y * (x %/% y) + (x %% y). La aritmética modular
+#es una herramienta útil porque te permite dividir enteros en partes. Por ejemplo, en el conjunto de datos de vuelos,
+#puedes calcular hora y minutos de horario_salida con:
+
+transmute(vuelos, horario_salida, hora = horario_salida %/% 100, minuto = horario_salida %% 100)
+
+
+#Logaritmos: log(), log2(), log10(). Los logaritmos son increíblemente útiles como transformación para trabajar con datos
+#con múltiples órdenes de magnitud.
+
+#Rezagos: lead() y lag() te permiten referirte a un valor adelante o un valor atrás (con rezago).
+
+(x <- 1:10)
+
+lag(x)
+
+lead(x)
+
+#Agregados acumulativos y móviles: R proporciona funciones para ejecutar sumas, productos, mínimos y máximos: cumsum(), cumprod(),
+#cummin(), cummax(); dplyr, por su parte, proporciona cummean() para las medias acumuladas.
+
+cumsum(x)
+
+cummean(x)
+
+#Ordenamiento: hay una serie de funciones de ordenamiento (ranking), pero deberías comenzar con min_rank(). Esta función realiza el tipo
+#más común de ordenamiento (por ejemplo, primero, segundo, tercero, etc.). El valor predeterminado otorga la menor posición a los valores
+#más pequeños; usa desc(x) para dar la menor posición a los valores más grandes.
+
+y <- c (1, 2, 2, NA, 3, 4)
+
+min_rank(y)
+
+min_rank(desc(y))
