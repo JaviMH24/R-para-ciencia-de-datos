@@ -368,7 +368,7 @@ vuelos_sml
 #De esta forma mutamos o creamos una columna 
 mutate(vuelos_sml, ganancia = atraso_salida - atraso_llegada, velocidad = distancia / tiempo_vuelo * 60)
 
-#Hay que tomar en cuenta que puedes hacer referencia a las columnas que se acaban de crear:
+#Hay que tomar en cuenta que podemos hacer referencia a las columnas que se acaban de crear:
 mutate(vuelos_sml, ganancia = atraso_salida - atraso_llegada, horas = tiempo_vuelo / 60,
        ganacia_por_hora = ganancia / horas)
 
@@ -430,3 +430,75 @@ y <- c (1, 2, 2, NA, 3, 4)
 min_rank(y)
 
 min_rank(desc(y))
+
+#---------------------------------------------------------------------------------------------------
+
+#Seccion 5.5.2 **Ejercicios**
+
+library(datos)
+library(tidyverse)
+
+view(vuelos)
+#1. Las variables horario_salida y salida_programada tienen un formato conveniente para leer, pero es 
+#difícil realizar cualquier cálculo con ellas porque no son realmente números continuos. 
+#Transfórmalas hacia un formato más conveniente como número de minutos desde la medianoche.
+
+transmute(vuelos, hora_salida= horario_salida %/%100   ,minuto_salida=horario_salida %%100,
+          hora_programada= salida_programada %/%100, minuto_programada=salida_programada  %%100)
+
+#---------------------------------------------------------------------------------------------------
+
+#Compara tiempo_vuelo con horario_llegada - horario_salida. ¿Qué esperas ver? ¿Qué ves? ¿Qué
+#necesitas hacer para arreglarlo?
+
+transmute(vuelos , tv= tiempo_vuelo, dif= horario_llegada - horario_salida)
+
+#R. De la misma forma se presentan las hora y los minutos encapsulados en terminos de tres digitos,
+#hay que separarlos
+
+data <- transmute(vuelos , time_vuelo= tiempo_vuelo, dif= horario_llegada - horario_salida)
+
+transmute(data, htime_vuelo= time_vuelo %/% 100 , mintime_vuelo=time_vuelo %% 100 ,
+          hdif_vuelo= dif %/% 100 , mindif_vuelo=dif %% 100)
+
+#---------------------------------------------------------------------------------------------------
+  
+#Compara horario_salida, salida_programada, y atraso_salida. ¿Cómo esperarías que esos tres 
+#números estén relacionados?
+
+select(vuelos, horario_salida, salida_programada, atraso_salida )
+
+#R. Reaciona aquellos vuelos que slieron tarde o mas temprano de su hora programada, y esta informacion
+#la otorga la varable atraso_salida, Si el vuelo partio antes de su hora aparecera un valor positivo
+#en esta variable, si el vuelo partio con minutos tarde se coocara en numeros rojos ese atraso
+
+#---------------------------------------------------------------------------------------------------
+  
+#Encuentra los 10 vuelos más retrasados utilizando una función de ordenamiento. ¿Cómo quieres 
+#manejar los empates? Lee atentamente la documentación de min_rank().
+
+#---------------------------------------------------------------------------------------------------
+
+#¿Qué devuelve 1:3 + 1:10? ¿Por qué?
+1:3 
+1:10
+
+1:3 + 1:10
+
+#R. Dado que se desean sumar cadenas, su longitd debe ser igual, en este caso las longitudes son
+#dferentes por ello arroja el error 
+
+#---------------------------------------------------------------------------------------------------
+  
+#¿Qué funciones trigonométricas proporciona R?
+
+#sin(x) → seno, cos(x) → coseno, tan(x) → tangente
+#asin(x) → arco seno , acos(x) → arco coseno, atan(x) → arco tangente, atan2(y, x) → arco tangente de y/x 
+#considerando el cuadrante (muy útil en coordenadas polares)
+
+#sinh(x) → seno hiperbólico , cosh(x) → coseno hiperbólico, tanh(x) → tangente hiperbólica
+
+#asinh(x) → arco seno hiperbólico , acosh(x) → arco coseno hiperbólico,  atanh(x)
+
+
+#--------------------------------------------------------------------------------------------------
